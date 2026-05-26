@@ -1,9 +1,39 @@
-import { DEFAULT_PROGRESS, type StudentProgress } from "@/types";
+import {
+  DEFAULT_PROGRESS,
+  isStudentProgressV1,
+  migrateProgressV1ToV2,
+  PROGRESS_SCHEMA_VERSION,
+  type StudentProgress,
+} from "@/types";
 
 const STORAGE_KEY = "geometry-summer-prep:progress";
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";
+}
+
+function normalizeProgress(parsed: unknown): StudentProgress {
+  if (isStudentProgressV1(parsed)) {
+    return migrateProgressV1ToV2(parsed);
+  }
+
+  if (
+    typeof parsed === "object" &&
+    parsed !== null &&
+    "version" in parsed &&
+    (parsed as StudentProgress).version === PROGRESS_SCHEMA_VERSION
+  ) {
+    const progress = parsed as StudentProgress;
+    return {
+      ...DEFAULT_PROGRESS,
+      ...progress,
+      version: PROGRESS_SCHEMA_VERSION,
+      problemAttempts: progress.problemAttempts ?? [],
+      skillMastery: progress.skillMastery ?? [],
+    };
+  }
+
+  return { ...DEFAULT_PROGRESS };
 }
 
 export function loadProgress(): StudentProgress {
@@ -16,11 +46,7 @@ export function loadProgress(): StudentProgress {
     if (!raw) {
       return { ...DEFAULT_PROGRESS };
     }
-    const parsed = JSON.parse(raw) as StudentProgress;
-    if (parsed.version !== 1) {
-      return { ...DEFAULT_PROGRESS };
-    }
-    return parsed;
+    return normalizeProgress(JSON.parse(raw));
   } catch {
     return { ...DEFAULT_PROGRESS };
   }

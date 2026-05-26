@@ -1,6 +1,7 @@
 "use client";
 
 import { useStudentProgress } from "@/lib/use-student-progress";
+import { countPracticeAttempts } from "@/types";
 
 export function ProgressSummary() {
   const progress = useStudentProgress();
@@ -25,7 +26,7 @@ export function ProgressSummary() {
           Practice attempts
         </dt>
         <dd className="mt-1 text-2xl font-bold text-amber-900">
-          {progress.practiceAttempts.length}
+          {countPracticeAttempts(progress)}
         </dd>
       </div>
       <div className="rounded-xl bg-rose-50 p-4">
