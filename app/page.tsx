@@ -2,7 +2,13 @@ import Link from "next/link";
 import { ComingSoonBanner } from "@/components/ComingSoonBanner";
 import { PageHeader } from "@/components/PageHeader";
 import { PlaceholderCard } from "@/components/PlaceholderCard";
-import { AngleDiagram, CircleDiagram, TriangleDiagram } from "@/components/diagrams";
+import {
+  CircleDiagram,
+  DiagramRenderer,
+  ParallelLinesDiagram,
+  RightTriangleDiagram,
+  TriangleDiagram,
+} from "@/components/diagrams";
 import { ProgressSummary } from "@/components/progress/ProgressSummary";
 import { mainNavItems } from "@/data/navigation";
 
@@ -26,12 +32,39 @@ export default function DashboardPage() {
 
         <PlaceholderCard title="Sample diagrams">
           <p className="mb-4">
-            SVG geometry diagrams will appear in lessons and practice.
+            SVG geometry diagrams scale for screen and print (black &amp; white).
           </p>
-          <div className="flex flex-wrap items-center justify-around gap-4 rounded-xl bg-sky-50/60 p-4">
-            <TriangleDiagram />
-            <AngleDiagram />
-            <CircleDiagram />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TriangleDiagram
+              className="max-h-36"
+              sideLabels={{ AB: 7, BC: "x", CA: 9 }}
+            />
+            <RightTriangleDiagram
+              className="max-h-36"
+              sideLabels={{ AB: "c", BC: 6, CA: "?" }}
+            />
+            <CircleDiagram
+              className="max-h-36"
+              radiusLabel="r = 5"
+              chordLabel="?"
+            />
+            <ParallelLinesDiagram
+              className="max-h-36"
+              angleLabels={{ "1": "x", "2": "65°", "7": "?", "8": "65°" }}
+            />
+          </div>
+          <div className="mt-4">
+            <DiagramRenderer
+              className="max-h-40 max-w-sm"
+              diagramType="coordinate-plane"
+              diagramData={{
+                showGrid: true,
+                points: [
+                  { label: "A", x: 2, y: 3 },
+                  { label: "B", x: -1, y: 2 },
+                ],
+              }}
+            />
           </div>
         </PlaceholderCard>
       </div>

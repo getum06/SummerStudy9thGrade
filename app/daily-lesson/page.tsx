@@ -29,7 +29,12 @@ export default function DailyLessonPage() {
         </PlaceholderCard>
 
         <div className="flex items-center justify-center rounded-2xl border border-border bg-card p-6">
-          <TriangleDiagram className="h-40 w-48" />
+          <TriangleDiagram
+            className="max-h-44 max-w-xs"
+            vertexLabels={{ A: "A", B: "B", C: "C" }}
+            sideLabels={{ AB: 10, BC: "x", CA: 12 }}
+            angleLabels={{ B: "?" }}
+          />
         </div>
       </div>
     </div>

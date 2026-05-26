@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ComingSoonBanner } from "@/components/ComingSoonBanner";
 import { PageHeader } from "@/components/PageHeader";
 import { PlaceholderCard } from "@/components/PlaceholderCard";
-import { AngleDiagram } from "@/components/diagrams";
+import { AngleRelationshipDiagram } from "@/components/diagrams";
 
 export const metadata: Metadata = {
   title: "Practice",
@@ -30,8 +30,12 @@ export default function PracticePage() {
           </p>
         </PlaceholderCard>
 
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-sky-50/50 p-6">
-          <AngleDiagram className="h-36 w-44" />
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-slate-50/50 p-6">
+          <AngleRelationshipDiagram
+            className="max-h-40 w-full max-w-xs"
+            relationship="vertical"
+            angleLabels={{ "1": "x", "2": "?", "3": "x", "4": "?" }}
+          />
           <p className="mt-3 text-center text-xs text-muted">
             Diagrams support practice questions
           </p>

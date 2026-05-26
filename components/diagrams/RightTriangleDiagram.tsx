@@ -3,38 +3,37 @@ import {
   DiagramText,
   formatDiagramValue,
   offsetFromMid,
+  RightAngleMarker,
   type DiagramValue,
 } from "./diagram-shared";
 import type { AngleLabels, SideLabels, VertexLabels } from "./types";
 
 /**
- * General triangle with optional vertex, side, and angle labels.
+ * Right triangle with a right-angle square marker.
  *
  * @example
  * ```tsx
- * <TriangleDiagram
+ * <RightTriangleDiagram
  *   vertexLabels={{ A: "A", B: "B", C: "C" }}
- *   sideLabels={{ AB: 8, BC: "x", CA: 10 }}
- *   angleLabels={{ A: "?", B: "52°", C: "?" }}
+ *   sideLabels={{ AB: "c", BC: "a = 6", CA: "b = ?" }}
+ *   rightAngleAt="C"
  * />
  * ```
  */
-export interface TriangleDiagramProps {
+export interface RightTriangleDiagramProps {
   className?: string;
   title?: string;
   vertexLabels?: VertexLabels;
   sideLabels?: SideLabels;
   angleLabels?: AngleLabels;
+  rightAngleAt?: "A" | "B" | "C";
 }
 
-const A = { x: 100, y: 24 };
-const B = { x: 168, y: 148 };
-const C = { x: 32, y: 148 };
+const A = { x: 100, y: 28 };
+const B = { x: 172, y: 152 };
+const C = { x: 36, y: 152 };
 
-function labelOr(
-  value: DiagramValue | undefined,
-  fallback: string,
-): string {
+function labelOr(value: DiagramValue | undefined, fallback: string): string {
   return formatDiagramValue(value) ?? fallback;
 }
 
@@ -67,52 +66,24 @@ function SideLabel({
   );
 }
 
-function AngleArc({
-  cx,
-  cy,
-  startAngle,
-  label,
-}: {
-  cx: number;
-  cy: number;
-  startAngle: number;
-  label?: DiagramValue;
-}) {
-  const text = formatDiagramValue(label);
-  if (!text) {
-    return null;
-  }
-  const r = 22;
-  const end = startAngle + 0.55;
-  const x1 = cx + r * Math.cos(startAngle);
-  const y1 = cy + r * Math.sin(startAngle);
-  const x2 = cx + r * Math.cos(end);
-  const y2 = cy + r * Math.sin(end);
-  const lx = cx + (r + 14) * Math.cos(startAngle + 0.28);
-  const ly = cy + (r + 14) * Math.sin(startAngle + 0.28);
-
-  return (
-    <>
-      <path
-        d={`M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`}
-        fill="none"
-        stroke="#000"
-        strokeWidth={1.5}
-      />
-      <DiagramText x={lx} y={ly} size={10}>
-        {text}
-      </DiagramText>
-    </>
-  );
-}
-
-export function TriangleDiagram({
+export function RightTriangleDiagram({
   className,
-  title = "Triangle diagram",
+  title = "Right triangle diagram",
   vertexLabels = {},
   sideLabels = {},
   angleLabels = {},
-}: TriangleDiagramProps) {
+  rightAngleAt = "C",
+}: RightTriangleDiagramProps) {
+  const rightCorner =
+    rightAngleAt === "A" ? A : rightAngleAt === "B" ? B : C;
+
+  const markerOrientation =
+    rightAngleAt === "A"
+      ? "top-left"
+      : rightAngleAt === "B"
+        ? "bottom-right"
+        : "bottom-left";
+
   return (
     <DiagramSvg className={className} title={title} viewBox="0 0 200 180">
       <polygon
@@ -123,14 +94,20 @@ export function TriangleDiagram({
         strokeLinejoin="round"
       />
 
+      <RightAngleMarker
+        x={rightCorner.x}
+        y={rightCorner.y}
+        orientation={markerOrientation}
+      />
+
       <SideLabel
         ax={A.x}
         ay={A.y}
         bx={B.x}
         by={B.y}
         label={sideLabels.AB}
-        ox={8}
-        oy={-6}
+        ox={6}
+        oy={-8}
       />
       <SideLabel
         ax={B.x}
@@ -139,7 +116,7 @@ export function TriangleDiagram({
         by={C.y}
         label={sideLabels.BC}
         ox={0}
-        oy={14}
+        oy={16}
       />
       <SideLabel
         ax={C.x}
@@ -147,13 +124,25 @@ export function TriangleDiagram({
         bx={A.x}
         by={A.y}
         label={sideLabels.CA ?? sideLabels.AC}
-        ox={-10}
-        oy={-6}
+        ox={-12}
+        oy={-8}
       />
 
-      <AngleArc cx={A.x} cy={A.y} startAngle={0.9} label={angleLabels.A} />
-      <AngleArc cx={B.x} cy={B.y} startAngle={2.4} label={angleLabels.B} />
-      <AngleArc cx={C.x} cy={C.y} startAngle={-2.2} label={angleLabels.C} />
+      {formatDiagramValue(angleLabels.A) ? (
+        <DiagramText x={A.x + 18} y={A.y + 20} anchor="start" size={10}>
+          {formatDiagramValue(angleLabels.A)}
+        </DiagramText>
+      ) : null}
+      {formatDiagramValue(angleLabels.B) ? (
+        <DiagramText x={B.x - 28} y={B.y - 8} anchor="end" size={10}>
+          {formatDiagramValue(angleLabels.B)}
+        </DiagramText>
+      ) : null}
+      {formatDiagramValue(angleLabels.C) ? (
+        <DiagramText x={C.x + 14} y={C.y - 18} anchor="start" size={10}>
+          {formatDiagramValue(angleLabels.C)}
+        </DiagramText>
+      ) : null}
 
       <DiagramText x={A.x} y={A.y - 10} size={13} bold>
         {labelOr(vertexLabels.A, "A")}
