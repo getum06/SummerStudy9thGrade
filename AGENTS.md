@@ -2,10 +2,24 @@
 
 ## Cursor Cloud specific instructions
 
-This repository ("SummerStudy9thGrade") is currently an empty starter repo with no application code, dependencies, or services. The only file is `README.md`.
+Next.js + TypeScript + Tailwind app ("Geometry Summer Prep").
 
-- **No build/lint/test commands** are available yet — no package manager lockfiles, no `Makefile`, no task runners.
-- **No services** need to be started.
-- **Update script** is intentionally a no-op (`true`) since there are no dependencies to install.
+### Services
 
-When application code is added to this repo, update this section and the VM update script accordingly.
+- **Dev server:** `npm run dev` (port 3000)
+- No other services required for local development.
+
+### Commands
+
+| Command           | Purpose              |
+| ----------------- | -------------------- |
+| `npm install`     | Install dependencies |
+| `npm run dev`     | Development server   |
+| `npm run build`   | Production build     |
+| `npm run lint`    | ESLint               |
+
+### Notes
+
+- Progress is stored in browser `localStorage` via `lib/progress-storage.ts` (client components only).
+- SVG diagrams live under `components/diagrams/`.
+- Most pages are placeholders; extend `data/` and `app/` routes as features are added.
